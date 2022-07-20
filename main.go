@@ -14,10 +14,13 @@ func main() {
 		port = "8080"
 	}
 
+	token := os.Getenv("TOKEN")
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		keys, ok := r.URL.Query()["bringme"]
-		if ok && len(keys[0]) > 1 {
-			resp, err := http.Get(keys[0])
+		url_key, ok_url := r.URL.Query()["bringme"]
+		token_key, ok_token := r.URL.Query()["token"]
+		if ok_url && len(url_key[0]) > 1 && ok_token && len(token_key[0]) > 1 && token_key[0] == token {
+			resp, err := http.Get(url_key[0])
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprint(w, "error")
