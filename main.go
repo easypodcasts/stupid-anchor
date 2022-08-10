@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -26,16 +26,7 @@ func main() {
 				fmt.Fprint(w, "error")
 				return
 			}
-			//We Read the response body on the line below.
-			body, err := ioutil.ReadAll(resp.Body)
-			if err != nil {
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Fprint(w, "error")
-				return
-			}
-			//Convert the body to type string
-			sb := string(body)
-			fmt.Fprint(w, sb)
+			io.Copy(w, resp.Body)
 		}
 	})
 
